@@ -1,8 +1,10 @@
 package io.cardeadev.pantompkinstesting;
 
 import android.graphics.Color;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
@@ -12,14 +14,19 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "Debug tag";
     LineChart lineChart ;
+
+    static int line_num = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +43,19 @@ public class MainActivity extends AppCompatActivity {
         lineChart.setViewPortOffsets(0, 20, 0, 0);
 
         lineChart.setData(new LineData());
-
-        lineChart.setTop(100);
-        lineChart.setBottom(-10);
+        lineChart.setBackgroundColor(Color.BLACK);
         lineChart.setDrawGridBackground(false);
-        lineChart.animateXY(100, 100) ;
+        lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getAxisRight().setDrawGridLines(false);
+        YAxis yAxis = new YAxis() ;
+        lineChart.getAxisLeft().setAxisMinValue(-125);
+        lineChart.getAxis(yAxis.getAxisDependency()).setDrawGridLines(false);
+
+        //lineChart.animateXY(100, 100) ;
+
+
+
 
         feedMultiple();
 
@@ -52,29 +67,49 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                for(int i = 0; i < 3000; i++) {
-
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            addEntry();
-
-                        }
-                    });
-
-                    try {
-                        Thread.sleep(60);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
+                readCSV(Environment.getExternalStorageDirectory() + "/data.csv");
             }
         }).start();
     }
 
-    private void addEntry() {
+    public void readCSV(String csvPath) {
+
+
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(csvPath));
+            //reader.readLine();//
+            String line = null;//
+
+
+            while ((line = reader.readLine()) != null) {
+
+                String item[] = line.split(",");
+
+                addEntry(item[0]);
+                Log.d(TAG, "readCSV: " + "Line: " + line_num + "Value:  " + item[0]);
+
+                try {
+                    Thread.sleep(10);
+                }catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                //System.out.println(dataAL.get(line_num));
+                line_num++;
+            }
+
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    private void addEntry(String val) {
 
         LineData data = lineChart.getData();
 
@@ -90,13 +125,13 @@ public class MainActivity extends AppCompatActivity {
 
             // add a new x-value first
             data.addXValue(String.valueOf(data.getXValCount()));
-            data.addEntry(new Entry((float) (Math.random() * 10) + 3f, set.getEntryCount()), 0);
+            data.addEntry(new Entry(Float.parseFloat(val), set.getEntryCount()), 0);
 
 
             lineChart.notifyDataSetChanged();
-            lineChart.setVisibleXRangeMaximum(100);
-            lineChart.moveViewToX(data.getXValCount() - 101);
 
+            lineChart.setVisibleXRangeMaximum(600);
+            lineChart.moveViewToX(data.getXValCount() - 601);
             // this automatically refreshes the chart (calls invalidate())
             // mChart.moveViewTo(data.getXValCount()-7, 55f,
             // AxisDependency.LEFT);

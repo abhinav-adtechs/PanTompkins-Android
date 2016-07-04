@@ -11,6 +11,7 @@ import java.util.Queue;
 public class Filter {
 
     private double[] currentECGReading;
+    private double currentECGVal ;
     private int samplingRate = 250 ;
     private static final double[] lowPassCoeff = { 1.0000,    2.0000,     1.0000,     1.0000,     -1.4755,    0.5869} ;
     private static final double[] highPassCoeff = {  1.0000,   -2.0000,    1.0000,    1.0000,   -1.8227,    0.8372} ;
@@ -25,6 +26,11 @@ public class Filter {
     public Filter(double[] ecg_vals) {
         currentECGReading = ecg_vals ;
     }
+
+    public Filter() {
+    }
+
+
 
     public void setCurrentECGReading(double[] currentECGReading) {
         this.currentECGReading = currentECGReading;
@@ -63,6 +69,18 @@ public class Filter {
         }
         return mod ;
     }
+
+    public double lowPassNext(String upValString){
+
+        double mod = 0, upVal ;
+        upVal = Double.parseDouble(upValString) ;
+        for (int i = 0; i < lowPassCoeff.length; i++) {
+            mod = mod + upVal* lowPassCoeff[i] ;
+        }
+        return mod ;
+    }
+
+
 
     public double highPassNext(double upVal){
         double mod = 0 ;

@@ -25,8 +25,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Debug tag";
     LineChart lineChart ;
+    double lowVal, highVal, diffVal, sqVal ;
 
     static int line_num = 0;
+
+    Filter filter = new Filter() ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +89,12 @@ public class MainActivity extends AppCompatActivity {
 
                 String item[] = line.split(",");
 
-                addEntry(item[0]);
-                Log.d(TAG, "readCSV: " + "Line: " + line_num + "Value:  " + item[0]);
+                lowVal = filter.lowPassNext(item[0]) ;
+                highVal = filter.highPassNext(lowVal) ;
+                diffVal = filter.diffFilterNext(highVal) ;
+                sqVal = filter.squareNext(diffVal) ;
+                addEntry(highVal);
+                Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal);
 
                 try {
                     Thread.sleep(10);
@@ -108,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
 
     private void addEntry(String val) {
 
@@ -132,9 +141,32 @@ public class MainActivity extends AppCompatActivity {
 
             lineChart.setVisibleXRangeMaximum(600);
             lineChart.moveViewToX(data.getXValCount() - 601);
-            // this automatically refreshes the chart (calls invalidate())
-            // mChart.moveViewTo(data.getXValCount()-7, 55f,
-            // AxisDependency.LEFT);
+        }
+    }
+
+    private void addEntry(double val) {
+
+        LineData data = lineChart.getData();
+
+        if (data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntry(...); // can be called as well
+
+            if (set == null) {
+                set = createSet();
+                data.addDataSet(set);
+            }
+
+            // add a new x-value first
+            data.addXValue(String.valueOf(data.getXValCount()));
+            data.addEntry(new Entry((float) val, set.getEntryCount()), 0);
+
+
+            lineChart.notifyDataSetChanged();
+
+            lineChart.setVisibleXRangeMaximum(600);
+            lineChart.moveViewToX(data.getXValCount() - 601);
         }
     }
 

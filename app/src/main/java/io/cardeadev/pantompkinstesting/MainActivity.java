@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Debug tag";
     LineChart lineChart ;
-    double lowVal, highVal, diffVal, sqVal ;
+    double lowVal, highVal, diffVal, sqVal, movingWindVal ;
 
     static int line_num = 0;
 
@@ -93,8 +93,13 @@ public class MainActivity extends AppCompatActivity {
                 highVal = filter.highPassNext(lowVal) ;
                 diffVal = filter.diffFilterNext(highVal) ;
                 sqVal = filter.squareNext(diffVal) ;
-                addEntry(item[0]);
-                Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal);
+                movingWindVal = filter.movingWindowNext(sqVal) ;
+                Log.d(TAG, "readCSV: " + movingWindVal);
+
+                addEntry(movingWindVal);
+                Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal + " movingWindowVal: " + movingWindVal);
+
+
 
                 try {
                     Thread.sleep(10);

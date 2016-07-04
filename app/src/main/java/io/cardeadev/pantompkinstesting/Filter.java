@@ -1,10 +1,13 @@
 package io.cardeadev.pantompkinstesting;
 
+import android.util.Log;
+
 /**
  * Created by abhinav on 28/06/16.
  */
 public class Filter {
 
+    private static final String TAG = "Debugging TAG";
     private double[] currentECGReading;
     private double currentECGVal ;
     private int samplingRate = 250 ;
@@ -110,7 +113,7 @@ public class Filter {
         movingWindowQueue.add(upVal) ;
         movingWindowSum = 0 ;
         for (int i = 0; i < movingWindowQueue.size(); i++) {
-            movingWindowSum = movingWindowSum + upVal ;
+            movingWindowSum = movingWindowSum + movingWindowQueue.get(i) ;
         }
         mod = movingWindowSum/movingWindowQueue.size() ;
         return mod;

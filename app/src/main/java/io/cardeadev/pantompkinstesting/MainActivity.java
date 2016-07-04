@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getAxisRight().setDrawGridLines(false);
         YAxis yAxis = new YAxis() ;
-        lineChart.getAxisLeft().setAxisMinValue(-125);
+        lineChart.getAxisLeft().setAxisMinValue(0);
         lineChart.getAxis(yAxis.getAxisDependency()).setDrawGridLines(false);
 
         //lineChart.animateXY(100, 100) ;
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 highVal = filter.highPassNext(lowVal) ;
                 diffVal = filter.diffFilterNext(highVal) ;
                 sqVal = filter.squareNext(diffVal) ;
-                addEntry(highVal);
+                addEntry(item[0]);
                 Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal);
 
                 try {

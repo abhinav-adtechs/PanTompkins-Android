@@ -1,10 +1,5 @@
 package io.cardeadev.pantompkinstesting;
 
-import com.google.common.collect.EvictingQueue;
-
-import java.util.LinkedList;
-import java.util.Queue;
-
 /**
  * Created by abhinav on 28/06/16.
  */
@@ -20,6 +15,9 @@ public class Filter {
     private FixedQueue<Double> movingWindowQueue = new FixedQueue<>(windowWidth) ;
     private double movingWindowSum = 0;
 
+    private double[] tempArrayX = new double[diffCoeff.length] ;
+
+
 
 
 
@@ -28,6 +26,7 @@ public class Filter {
     }
 
     public Filter() {
+        System.arraycopy(diffCoeff, 0, tempArrayX, 1, diffCoeff.length-1);
     }
 
 
@@ -91,9 +90,11 @@ public class Filter {
     }
 
     public double diffFilterNext(double upVal){
+        tempArrayX[0] = upVal ;
+
         double mod = 0 ;
         for (int i = 0; i < diffCoeff.length; i++) {
-            mod = mod + upVal * diffCoeff[i] ;
+            mod = mod + tempArrayX[i] * diffCoeff[i] ;
         }
         return mod ;
     }

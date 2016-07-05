@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getAxisRight().setDrawGridLines(false);
         YAxis yAxis = new YAxis() ;
-        lineChart.getAxisLeft().setAxisMinValue(0);
+        lineChart.getAxisLeft().setAxisMinValue(-20);
         lineChart.getAxis(yAxis.getAxisDependency()).setDrawGridLines(false);
 
         //lineChart.animateXY(100, 100) ;
@@ -96,9 +96,14 @@ public class MainActivity extends AppCompatActivity {
                 sqVal = filter.squareNext(diffVal) ;
                 movingWindVal = filter.movingWindowNext(sqVal) ;
 
-                addEntry(movingWindVal);
+                //tempEntryInit() ;
+                //addEntry(movingWindVal, 0);
+                //addEntry(highVal, 1);
+                //addEntryA(item[0]);
+                //addEntryA(movingWindVal, 1);
+                addCustomEntry(item[0], movingWindVal);
                 if(Integer.parseInt(item[0]) > 60){
-                    Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal + " movingWindowVal: " + movingWindVal);
+                  //  Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal + " movingWindowVal: " + movingWindVal);
                 }
 
 
@@ -124,15 +129,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void tempEntryInit() {
+        LineData data = lineChart.getData() ;
 
-    private void addEntry(String val) {
+
+
+        if(data.getDataSetCount() < 2){
+            for (int i = data.getDataSetCount(); i < 2; i++) {
+                ILineDataSet currentSet ;
+                LineDataSet dataSet = new LineDataSet(null, "Row" + i) ;
+                dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+                dataSet.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                currentSet = dataSet ;
+                data.addDataSet(currentSet);
+            }
+        }
+
+
+    }
+
+    private void addEntry(double val, int type){
+        LineData data = lineChart.getData() ;
+        ILineDataSet set = data.getDataSetByIndex(type) ;
+
+        Log.d(TAG, "addEntry: " + val + " Type: " + type + " EntryCount:" + set.getEntryCount());
+
+
+        data.addEntry(new Entry((float) val, set.getEntryCount()), type);
+
+        lineChart.notifyDataSetChanged();
+
+        lineChart.setVisibleXRangeMaximum(600);
+        lineChart.moveViewToX(data.getXValCount() - 601);
+    }
+
+
+
+
+
+    /**
+     * ORIGINAL CODE TO BE USED
+     * */
+
+    private void addEntryA(String val) {
 
         LineData data = lineChart.getData();
 
         if (data != null) {
 
             ILineDataSet set = data.getDataSetByIndex(0);
-            // set.addEntry(...); // can be called as well
+            // set.addEntryA(...); // can be called as well
 
             if (set == null) {
                 set = createSet();
@@ -141,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
             // add a new x-value first
             data.addXValue(String.valueOf(data.getXValCount()));
+            Log.d(TAG, "addEntryA: " + val);
             data.addEntry(new Entry(Float.parseFloat(val), set.getEntryCount()), 0);
 
 
@@ -151,17 +198,78 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void addEntry(double val) {
+    private void addCustomEntry(String ecgVal, double movingVal) {
 
         LineData data = lineChart.getData();
 
         if (data != null) {
 
             ILineDataSet set = data.getDataSetByIndex(0);
-            // set.addEntry(...); // can be called as well
+            ILineDataSet set2 = data.getDataSetByIndex(1) ;
+            // set.addEntryA(...); // can be called as well
 
             if (set == null) {
                 set = createSet();
+                data.addDataSet(set);
+            }
+            if (set2 == null) {
+                set2 = createSetB() ;
+                data.addDataSet(set2);
+            }
+
+            // add a new x-value first
+            data.addXValue(String.valueOf(data.getXValCount()));
+            Log.d(TAG, "addEntryA: " + ecgVal);
+            data.addEntry(new Entry(Float.parseFloat(ecgVal), set.getEntryCount()), 0);
+            data.addEntry(new Entry((float) movingVal*200, set.getEntryCount()), 1);
+
+
+            lineChart.notifyDataSetChanged();
+
+            lineChart.setVisibleXRangeMaximum(600);
+            lineChart.moveViewToX(data.getXValCount() - 601);
+        }
+    }
+
+
+    private void addEntryA(double val, int type) {
+
+        LineData data = lineChart.getData();
+
+        if (data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(type);
+            // set.addEntryA(...); // can be called as well
+
+            if (set == null) {
+                set = createSetB();
+                data.addDataSet(set);
+            }
+
+            // add a new x-value first
+            data.addXValue(String.valueOf(data.getXValCount()));
+            Log.d(TAG, "addEntryA: " + val);
+            data.addEntry(new Entry((float) val*200, set.getEntryCount()), type);
+
+
+            lineChart.notifyDataSetChanged();
+
+            lineChart.setVisibleXRangeMaximum(600);
+            lineChart.moveViewToX(data.getXValCount() - 1201);
+        }
+    }
+
+    private void addEntryB(double val) {
+
+        LineData data = lineChart.getData();
+
+        if (data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(1);
+            // set.addEntryA(...); // can be called as well
+
+            if (set == null) {
+                set = createSetB();
                 data.addDataSet(set);
             }
 
@@ -196,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private LineDataSet createSetB(){
-        LineDataSet setB = new LineDataSet(null, "ECG");
+        LineDataSet setB = new LineDataSet(null, "Next Level Vals");
         setB.setAxisDependency(YAxis.AxisDependency.LEFT);
         setB.setColor(getResources().getColor(R.color.colorAccent));
         setB.setCircleColor(Color.BLACK);

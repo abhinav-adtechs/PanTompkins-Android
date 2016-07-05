@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         lineChart.setViewPortOffsets(0, 20, 0, 0);
 
         lineChart.setData(new LineData());
+        lineChart.setData(new LineData());
         lineChart.setBackgroundColor(Color.BLACK);
         lineChart.setDrawGridBackground(false);
         lineChart.getAxisLeft().setDrawGridLines(false);
@@ -94,10 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 diffVal = filter.diffFilterNext(highVal) ;
                 sqVal = filter.squareNext(diffVal) ;
                 movingWindVal = filter.movingWindowNext(sqVal) ;
-                Log.d(TAG, "readCSV: " + movingWindVal);
 
                 addEntry(movingWindVal);
-                Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal + " movingWindowVal: " + movingWindVal);
+                if(Integer.parseInt(item[0]) > 60){
+                    Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal + " movingWindowVal: " + movingWindVal);
+                }
 
 
 
@@ -191,5 +193,20 @@ public class MainActivity extends AppCompatActivity {
         set.setValueTextSize(9f);
         set.setDrawValues(false);
         return set;
+    }
+
+    private LineDataSet createSetB(){
+        LineDataSet setB = new LineDataSet(null, "ECG");
+        setB.setAxisDependency(YAxis.AxisDependency.LEFT);
+        setB.setColor(getResources().getColor(R.color.colorAccent));
+        setB.setCircleColor(Color.BLACK);
+        setB.setLineWidth(2f);
+        setB.setCircleRadius(0.1f);
+        setB.setFillAlpha(65);
+        setB.setFillColor(ColorTemplate.getHoloBlue());
+        setB.setHighLightColor(Color.rgb(244, 117, 117));
+        setB.setValueTextSize(9f);
+        setB.setDrawValues(false);
+        return setB;
     }
 }

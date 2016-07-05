@@ -14,6 +14,8 @@
         <activity android:name=".MainActivity"
             android:screenOrientation="landscape"
             >
+        </activity>
+        <activity android:name=".SampleMulti" android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -53,16 +53,45 @@ public class MainActivity extends AppCompatActivity {
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getAxisRight().setDrawGridLines(false);
         YAxis yAxis = new YAxis() ;
-        lineChart.getAxisLeft().setAxisMinValue(-20);
+        //lineChart.getAxisLeft().setAxisMinValue(-20);
         lineChart.getAxis(yAxis.getAxisDependency()).setDrawGridLines(false);
+        //lineChart.moveViewToX(1000);
 
         //lineChart.animateXY(100, 100) ;
 
 
-
+        dataInit() ;
 
         feedMultiple();
 
+    }
+
+    private void dataInit() {
+        LineData data = lineChart.getData();
+
+        if (data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntryA(...); // can be called as well
+
+            if (set == null) {
+                set = createSet();
+                data.addDataSet(set);
+            }
+
+            // add a new x-value first
+            for (int i = 0; i < 601; i++) {
+                data.addXValue(String.valueOf(data.getXValCount()));
+                data.addEntry(new Entry(0, set.getEntryCount()), 0);
+            }
+            //Log.d(TAG, "addEntryA: " + val);
+
+
+            lineChart.notifyDataSetChanged();
+
+            lineChart.setVisibleXRangeMaximum(600);
+            lineChart.moveViewToX(data.getXValCount() - 601);
+        }
     }
 
     private void feedMultiple() {
@@ -71,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                readCSV(Environment.getExternalStorageDirectory() + "/data.csv");
+                readCSV(Environment.getExternalStorageDirectory() + "/Movies/data.csv");
             }
         }).start();
     }
@@ -90,8 +119,11 @@ public class MainActivity extends AppCompatActivity {
 
                 String item[] = line.split(",");
 
-                lowVal = filter.lowPassNext(item[0]) ;
-                highVal = filter.highPassNext(lowVal) ;
+                lowVal = filter.LowPassFilter(Double.parseDouble(item[0])) ;
+                highVal = filter.HighPassFilter(lowVal) ;
+
+                /*addEntryA(highVal);*/
+                /*highVal = filter.highPassNext(lowVal) ; */
                 diffVal = filter.diffFilterNext(highVal) ;
                 sqVal = filter.squareNext(diffVal) ;
                 movingWindVal = filter.movingWindowNext(sqVal) ;
@@ -99,12 +131,10 @@ public class MainActivity extends AppCompatActivity {
                 //tempEntryInit() ;
                 //addEntry(movingWindVal, 0);
                 //addEntry(highVal, 1);
-                //addEntryA(item[0]);
-                //addEntryA(movingWindVal, 1);
-                addCustomEntry(item[0], movingWindVal);
-                if(Integer.parseInt(item[0]) > 60){
-                  //  Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal + " movingWindowVal: " + movingWindVal);
-                }
+                //addEntryA(lowVal);
+                addEntryA(movingWindVal, 1);
+                //addCustomEntry(item[0], movingWindVal);
+                   //Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal + " movingWindowVal: " + movingWindVal);
 
 
 
@@ -187,8 +217,36 @@ public class MainActivity extends AppCompatActivity {
 
             // add a new x-value first
             data.addXValue(String.valueOf(data.getXValCount()));
-            Log.d(TAG, "addEntryA: " + val);
+            //Log.d(TAG, "addEntryA: " + val);
             data.addEntry(new Entry(Float.parseFloat(val), set.getEntryCount()), 0);
+
+
+            lineChart.notifyDataSetChanged();
+
+            lineChart.setVisibleXRangeMaximum(600);
+            lineChart.moveViewToX(data.getXValCount() - 601);
+        }
+    }
+
+
+    private void addEntryA(double val) {
+
+        LineData data = lineChart.getData();
+
+        if (data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntryA(...); // can be called as well
+
+            if (set == null) {
+                set = createSet();
+                data.addDataSet(set);
+            }
+
+            // add a new x-value first
+            data.addXValue(String.valueOf(data.getXValCount()));
+            //Log.d(TAG, "addEntryA: " + val);
+            data.addEntry(new Entry((float)val, set.getEntryCount()), 0);
 
 
             lineChart.notifyDataSetChanged();
@@ -219,9 +277,9 @@ public class MainActivity extends AppCompatActivity {
 
             // add a new x-value first
             data.addXValue(String.valueOf(data.getXValCount()));
-            Log.d(TAG, "addEntryA: " + ecgVal);
+            Log.d(TAG, "addEntryA: " + ecgVal + " movWindVal: " + movingWindVal*200);
             data.addEntry(new Entry(Float.parseFloat(ecgVal), set.getEntryCount()), 0);
-            data.addEntry(new Entry((float) movingVal*200, set.getEntryCount()), 1);
+            data.addEntry(new Entry((float) movingVal, set.getEntryCount()), 1);
 
 
             lineChart.notifyDataSetChanged();
@@ -248,8 +306,12 @@ public class MainActivity extends AppCompatActivity {
 
             // add a new x-value first
             data.addXValue(String.valueOf(data.getXValCount()));
-            Log.d(TAG, "addEntryA: " + val);
-            data.addEntry(new Entry((float) val*200, set.getEntryCount()), type);
+            Log.d(TAG, "addEntryA: " + val*200  );
+            if(val*200 > 1000){
+                data.addEntry(new Entry((float) val*200, set.getEntryCount()), type);
+            }else {
+                data.addEntry(new Entry( 0, set.getEntryCount()), type);
+            }
 
 
             lineChart.notifyDataSetChanged();

@@ -20,8 +20,19 @@ public class Filter {
 
     private double[] tempArrayX = new double[diffCoeff.length] ;
 
+    private double[] lowPass_temp = new double[lowPassCoeff.length] ;
+    private double[] highPass_temp = new double[highPassCoeff.length] ;
 
 
+    private int i,n=12;
+    private double y0=0,y1=0,y2=0, x[] = new double[26];
+
+
+    ///////
+    private double highy0=0,highy1=0, highx[] = new double[66];
+    private int Highn=32;
+
+    private int movingWindCounter = 0 ;
 
 
     public Filter(double[] ecg_vals) {
@@ -76,6 +87,7 @@ public class Filter {
 
         double mod = 0, upVal ;
         upVal = Double.parseDouble(upValString) ;
+
         for (int i = 0; i < lowPassCoeff.length; i++) {
             mod = mod + upVal* lowPassCoeff[i] ;
         }
@@ -83,9 +95,34 @@ public class Filter {
     }
 
 
+    double LowPassFilter(double val){
+
+        x[n] = x[n + 13] = val;
+        y0 = (y1*2) - y2 + x[n] - (x[n +6]*2) + x[n +12];
+        y2 = y1;
+        y1 = y0;
+        y0 = y0/32;
+        if(--n < 0)
+            n = 12;
+
+        return y0 ;
+
+    }
+
+    double HighPassFilter(double val){
+
+        highx[Highn] = highx[Highn + 33] = val;
+        highy0 = highy1 + highx[Highn] - highx[Highn + 32];
+        highy1 = highy0;
+        if(--Highn < 0)
+            Highn = 32;
+
+       return highx[Highn + 16] - (highy0/32);
+    }
 
     public double highPassNext(double upVal){
         double mod = 0 ;
+
         for (int i = 0; i < highPassCoeff.length; i++) {
             mod = mod + upVal* highPassCoeff[i] ;
         }

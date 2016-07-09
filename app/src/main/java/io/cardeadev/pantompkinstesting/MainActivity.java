@@ -53,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getAxisRight().setDrawGridLines(false);
         YAxis yAxis = new YAxis() ;
-        //lineChart.getAxisLeft().setAxisMinValue(-20);
+
+        lineChart.getAxisLeft().setAxisMinValue(-20);
+
         lineChart.getAxis(yAxis.getAxisDependency()).setDrawGridLines(false);
         //lineChart.moveViewToX(1000);
 
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                readCSV(Environment.getExternalStorageDirectory() + "/Movies/data.csv");
+                readCSV(Environment.getExternalStorageDirectory() + "/data.csv");
             }
         }).start();
     }
@@ -119,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
 
                 String item[] = line.split(",");
 
+                line_num++;
+                if(line_num%5 == 0){
+                    continue ;
+                }
                 lowVal = filter.LowPassFilter(Double.parseDouble(item[0])) ;
                 highVal = filter.HighPassFilter(lowVal) ;
 
@@ -131,10 +137,11 @@ public class MainActivity extends AppCompatActivity {
                 //tempEntryInit() ;
                 //addEntry(movingWindVal, 0);
                 //addEntry(highVal, 1);
-                //addEntryA(lowVal);
-                addEntryA(movingWindVal, 1);
-                //addCustomEntry(item[0], movingWindVal);
-                   //Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal + " movingWindowVal: " + movingWindVal);
+                //addEntryA(item[0]);
+                //addEntryA(movingWindVal, 1);
+                addCustomEntry(item[0], movingWindVal);
+
+                Log.d(TAG, "readCSV: " + "Line: " + line_num + " Value:  " + item[0] + " lowVal: " + lowVal + " highVal: " + highVal + " diffVal: " + diffVal + " sqVal: " + sqVal + " movingWindowVal: " + movingWindVal);
 
 
 
@@ -145,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //System.out.println(dataAL.get(line_num));
-                line_num++;
             }
 
         } catch (FileNotFoundException e) {

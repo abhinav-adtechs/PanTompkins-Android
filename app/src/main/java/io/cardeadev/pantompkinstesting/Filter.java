@@ -2,9 +2,7 @@ package io.cardeadev.pantompkinstesting;
 
 import android.util.Log;
 
-/**
- * Created by abhinav on 28/06/16.
- */
+
 public class Filter {
 
     private static final String TAG = "Debugging TAG";
@@ -14,7 +12,7 @@ public class Filter {
     private static final double[] lowPassCoeff = { 1.0000,    2.0000,     1.0000,     1.0000,     -1.4755,    0.5869} ;
     private static final double[] highPassCoeff = {  1.0000,   -2.0000,    1.0000,    1.0000,   -1.8227,    0.8372} ;
     private static final double[] diffCoeff = {-0.1250,	-0.2500,	0,	0.2500,	0.1250} ;
-    private static final int windowWidth = 38 ;
+    private static final int windowWidth = 30 ;
     private FixedQueue<Double> movingWindowQueue = new FixedQueue<>(windowWidth) ;
     private double movingWindowSum = 0;
 
@@ -22,7 +20,6 @@ public class Filter {
 
     private double[] lowPass_temp = new double[lowPassCoeff.length] ;
     private double[] highPass_temp = new double[highPassCoeff.length] ;
-
 
     private int i,n=12;
     private double y0=0,y1=0,y2=0, x[] = new double[26];
@@ -32,7 +29,7 @@ public class Filter {
     private double highy0=0,highy1=0, highx[] = new double[66];
     private int Highn=32;
 
-    private int movingWindCounter = 0 ;
+
 
 
     public Filter(double[] ecg_vals) {
@@ -63,7 +60,6 @@ public class Filter {
             //or//
             //tempVar = squareNext(diffFilterNext(highPassNext(lowPassNext(currentECGReading[i])))) ;
         }
-
     }
 
     public void movingWindowhandler(){

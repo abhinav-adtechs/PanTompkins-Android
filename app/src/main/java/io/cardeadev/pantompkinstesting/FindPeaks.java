@@ -7,8 +7,10 @@ public class FindPeaks {
 
     private Context mContext ;
     private int[] peakArray ;
-    public static final int windowWidth = 44 ;
+    private static final int windowWidth = 44 ;
     private FixedQueue<Double> peakFindingQueue = new FixedQueue<>(windowWidth) ;
+    private int currentMaxima ;
+
 
     public FindPeaks(Context mContext) {
         this.mContext = mContext;
@@ -21,4 +23,6 @@ public class FindPeaks {
     public int[] getPeakArray() {
         return peakArray;
     }
+
+
 }

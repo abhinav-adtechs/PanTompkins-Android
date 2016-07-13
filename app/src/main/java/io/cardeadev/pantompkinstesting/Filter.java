@@ -12,7 +12,7 @@ public class Filter {
     private static final double[] lowPassCoeff = { 1.0000,    2.0000,     1.0000,     1.0000,     -1.4755,    0.5869} ;
     private static final double[] highPassCoeff = {  1.0000,   -2.0000,    1.0000,    1.0000,   -1.8227,    0.8372} ;
     private static final double[] diffCoeff = {-0.1250,	-0.2500,	0,	0.2500,	0.1250} ;
-    private static final int windowWidth = 30 ;
+    private static final int windowWidth = 80 ;
     private FixedQueue<Double> movingWindowQueue = new FixedQueue<>(windowWidth) ;
     private double movingWindowSum = 0;
 

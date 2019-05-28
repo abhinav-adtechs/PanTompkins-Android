@@ -1,4 +1,4 @@
-package io.cardeadev.pantompkinstesting;
+package io.medicaldev.pantompkinstesting;
 
 import android.graphics.Color;
 import android.os.Bundle;

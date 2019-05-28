@@ -1,4 +1,4 @@
-package io.cardeadev.pantompkinstesting;
+package io.medicaldev.pantompkinstesting;
 
 import android.util.Log;
 

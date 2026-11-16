@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-label="PanTompkins-Android — QRS-detection filter chain, streaming on Android">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070a12"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="160" cy="40" r="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff4d6d" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ff4d6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="1180" cy="360" r="560" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ff4d6d"/>
+    </linearGradient>
+    <linearGradient id="motif" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff4d6d"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity="0.045"/>
+    </pattern>
+    <clipPath id="card"><rect width="1280" height="360" rx="28"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#card)">
+    <rect width="1280" height="360" fill="url(#bg)"/>
+    <rect width="1280" height="360" fill="url(#grid)"/>
+    <rect width="1280" height="360" fill="url(#glowA)">
+      <animate attributeName="opacity" values="0.75;1;0.75" dur="7s" repeatCount="indefinite"/>
+    </rect>
+    <rect width="1280" height="360" fill="url(#glowB)"/>
+
+    <!-- MOTIF: two ECG beats (top), detection markers, and the moving-window-integrated envelope with a threshold (bottom) -->
+    <g id="motif-group" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <g stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5" stroke-dasharray="3 7">
+        <path d="M922 44V300"/>
+        <path d="M1097 44V300"/>
+      </g>
+      <path d="M842 150h28q10 -16 20 0h14l6 10l12 -92l12 128l8 -46h18q18 -30 36 0h21h28q10 -16 20 0h14l6 10l12 -92l12 128l8 -46h18q18 -30 36 0h21h20" stroke="url(#motif)" stroke-width="3.5" opacity="0.95"/>
+      <path d="M842 262H1212" stroke="#22d3ee" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="6 8"/>
+      <path d="M842 290H912C930 290 935 238 955 238C975 238 980 290 998 290H1087C1105 290 1110 238 1130 238C1150 238 1155 290 1173 290H1212" stroke="#22d3ee" stroke-width="3" opacity="0.9"/>
+      <g fill="#ff4d6d" stroke="none">
+        <circle cx="922" cy="68" r="6"/>
+        <circle cx="1097" cy="68" r="6"/>
+      </g>
+      <g fill="#22d3ee" stroke="none">
+        <circle cx="955" cy="238" r="4.5"/>
+        <circle cx="1130" cy="238" r="4.5"/>
+      </g>
+      <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" stroke="none">
+        <text x="934" y="62" fill="#ff8fa3">QRS</text>
+        <text x="1109" y="62" fill="#ff8fa3">QRS</text>
+        <text x="848" y="281" fill="#67e8f9" fill-opacity="0.8">MWI</text>
+      </g>
+    </g>
+  </g>
+
+  <text x="80" y="168" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="80" font-weight="800" letter-spacing="-2" fill="url(#title)">Pan–Tompkins</text>
+  <text x="84" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="27" font-weight="500" fill="#cbd5e1">QRS-detection filter chain, streaming on Android</text>
+
+  <!-- CHIPS: one <g> per chip; width = chars*10.85 + 32; 14px gap between chips -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" fill="#e2e8f0">
+    <g transform="translate(84 256)">
+      <rect width="75.4" height="38" rx="19" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <text x="16" y="25">Java</text>
+    </g>
+    <g transform="translate(173.4 256)">
+      <rect width="108" height="38" rx="19" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <text x="16" y="25">Android</text>
+    </g>
+    <g transform="translate(295.4 256)">
+      <rect width="97.1" height="38" rx="19" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <text x="16" y="25">200 Hz</text>
+    </g>
+    <g transform="translate(406.5 256)">
+      <rect width="183.9" height="38" rx="19" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.16"/>
+      <text x="16" y="25">IEEE TBME 1985</text>
+    </g>
+  </g>
+
+  <rect x="0.5" y="0.5" width="1279" height="359" rx="28" fill="none" stroke="#ffffff" stroke-opacity="0.1"/>
+</svg>

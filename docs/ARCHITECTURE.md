@@ -71,12 +71,11 @@ Notes on the flow:
 | `compileSdkVersion` / `targetSdkVersion` | 28 / 28                                                                                                             | `app/build.gradle`                                       |
 | `minSdkVersion`                          | 19                                                                                                                  | `app/build.gradle`                                       |
 | `applicationId`                          | `io.medicaldev.pantompkinstesting`                                                                                  | `app/build.gradle`                                       |
-| Manifest `package`                       | `io.medicaldev.pantompkins`                                                                                         | `app/src/main/AndroidManifest.xml` (mismatch, see below) |
+| Manifest `package`                       | `io.medicaldev.pantompkinstesting`                                                                                         | `app/src/main/AndroidManifest.xml` |
 | Repositories                             | `jcenter()`, `google()`, JitPack                                                                                    | `build.gradle`, `app/build.gradle`                       |
 | Dependencies                             | `appcompat-v7:28.0.0`, `MPAndroidChart:v2.2.5`, `guava:18.0` (declared, not imported anywhere), `junit:4.12` (test) | `app/build.gradle`                                       |
 
-> [!WARNING]
-> **Package mismatch at `HEAD`.** The 2019 rename (`1e43b9f`) set the manifest `package` to `io.medicaldev.pantompkins`, but the Java sources live in `io.medicaldev.pantompkinstesting`. Under AGP 3.x, the generated `R` class follows the manifest package, and relative activity names (`.MainActivity`) resolve against it too. Expect `cannot find symbol: R` until the two match. Changing the manifest to `package="io.medicaldev.pantompkinstesting"` is the one-line fix (tracked on the roadmap).
+The manifest package matches the Java source package and `applicationId`. With AGP 3.x, this places the generated `R` class in the Java source package and resolves relative activity names such as `.MainActivity` against it.
 
 ## Repository hygiene
 

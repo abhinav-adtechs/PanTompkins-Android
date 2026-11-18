@@ -118,16 +118,9 @@ All five filter stages are methods on [`Filter`](app/src/main/java/io/medicaldev
    cd PanTompkins-Android
    ```
 
-2. **Align the manifest package** (one line). The 2019 rename left the manifest and the Java sources in different packages, so `R` won't resolve. In `app/src/main/AndroidManifest.xml`:
+2. **Open in Android Studio** (_File › Open_, select the repo root) and let it sync. The repo ships `gradle-wrapper.properties` but no `gradlew` script. Android Studio's Gradle integration reads the distribution URL from that properties file, so it can sync without the script. The committed `local.properties` points at the original author's SDK path; Android Studio rewrites it for your machine.
 
-   ```diff
-   -    package="io.medicaldev.pantompkins">
-   +    package="io.medicaldev.pantompkinstesting">
-   ```
-
-3. **Open in Android Studio** (_File › Open_, select the repo root) and let it sync. The repo ships `gradle-wrapper.properties` but no `gradlew` script. Android Studio's Gradle integration reads the distribution URL from that properties file, so it can sync without the script. The committed `local.properties` points at the original author's SDK path; Android Studio rewrites it for your machine.
-
-4. **Prepare the input.** The app reads `/sdcard/data.csv`. Use one sample per line, with the ECG value in the first comma-separated column, **no header row**, recorded at **250 Hz**:
+3. **Prepare the input.** The app reads `/sdcard/data.csv`. Use one sample per line, with the ECG value in the first comma-separated column, **no header row**, recorded at **250 Hz**:
 
    ```text
    512
@@ -139,13 +132,13 @@ All five filter stages are methods on [`Filter`](app/src/main/java/io/medicaldev
    adb push data.csv /sdcard/data.csv
    ```
 
-5. **Grant storage access.** The app declares the permission but never asks for it at runtime:
+4. **Grant storage access.** The app declares the permission but never asks for it at runtime:
 
    ```bash
    adb shell pm grant io.medicaldev.pantompkinstesting android.permission.READ_EXTERNAL_STORAGE
    ```
 
-6. **Run** the `app` configuration. The chart starts scrolling once the reader thread opens the file.
+5. **Run** the `app` configuration. The chart starts scrolling once the reader thread opens the file.
 
 > [!TIP]
 > **Opening it in a modern Android Studio?** Expect to migrate the build. Point the wrapper at a current Gradle, bump AGP, and replace `jcenter()` with `mavenCentral()` (JitPack still hosts MPAndroidChart). Change `compile`/`testCompile` to `implementation`/`testImplementation`, run _Refactor › Migrate to AndroidX_, and move the package into a `namespace` in `app/build.gradle`. On Android 10+ devices, scoped storage may block the hard-coded `/sdcard` path. Loading the CSV through the Storage Access Framework or from `assets/` avoids that (both are on the roadmap).
@@ -229,13 +222,12 @@ PanTompkins-Android/
 | Document                                           | What's inside                                                                                                                                                                                       |
 | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`docs/ALGORITHM.md`](docs/ALGORITHM.md)           | Each filter's difference equation, how the Java implements it, verified cut-offs and delays, sampling-rate assumptions, and the paper's decision rules (thresholds, search-back, refractory period) |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)     | Class map, runtime data flow, threading, build configuration, known build issue                                                                                                                     |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)     | Class map, runtime data flow, threading, build configuration, known issues                                                                                                                     |
 | [`CHANGELOG.md`](CHANGELOG.md)                     | Release history derived from the commit log                                                                                                                                                         |
 | [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) | Licence of the bundled `HeartyFilter.java`                                                                                                                                                          |
 
 ## Roadmap
 
-- [ ] Align `AndroidManifest.xml`'s `package` with the Java package so `HEAD` builds
 - [ ] Fix the derivative stage so its delay line actually shifts
 - [ ] Implement the decision stage in `FindPeaks`: adaptive thresholds, 200 ms refractory period, search-back, T-wave check
 - [ ] Ship a small, clearly-licensed sample `data.csv` and document the input format

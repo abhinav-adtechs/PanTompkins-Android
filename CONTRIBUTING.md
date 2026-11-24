@@ -20,6 +20,14 @@ Please follow the [Code of Conduct](https://github.com/abhinav-adtechs/.github/b
 
 There is no `gradlew` script in the repo, only `gradle/wrapper/gradle-wrapper.properties`. To build from the command line, generate the wrapper with a local Gradle install (`gradle wrapper --gradle-version 5.1.1`), but **don't commit the generated files** unless your PR is specifically about the build.
 
+## Running the unit tests
+
+`FilterTest` (`app/src/test/java/io/medicaldev/pantompkinstesting/FilterTest.java`) covers every `Filter` stage and `FixedQueue` with plain JUnit 4 on the JVM, no emulator needed. With the toolchain from the setup above (AGP 3.4.1 / Gradle 5.1.1, JDK 8, SDK Platform 28):
+
+```bash
+gradle testDebugUnitTest
+```
+
 ## Working on the DSP code
 
 - Read [`docs/ALGORITHM.md`](docs/ALGORITHM.md) first. It maps every equation to a method and line number.
